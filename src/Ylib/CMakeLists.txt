@@ -1,5 +1,5 @@
 
-add_library(ycadgraywolf SHARED
+add_library(ycadgraywolf STATIC 
 	assign.c
 	buster.c
 	cleanup.c
@@ -54,9 +54,8 @@ set_target_properties(ycadgraywolf PROPERTIES VERSION 0.0.0 SOVERSION 0)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include)
 
-install(
-	TARGETS ycadgraywolf
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	)
+#install(
+#	TARGETS ycadgraywolf
+#	DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#	)
 

@@ -1,11 +1,11 @@
-
-add_subdirectory(Ylib)
-add_subdirectory(date)
-add_subdirectory(twmc)
-add_subdirectory(genrows)
-add_subdirectory(twflow)
+#the libs
+#add_subdirectory(Ylib)
+#add_subdirectory(date)
 add_subdirectory(mincut)
-add_subdirectory(twsc)
-add_subdirectory(syntax)
-add_subdirectory(mc_compact)
-
+#add_subdirectory(genrows)
+#add_subdirectory(twmc)
+#add_subdirectory(twsc)
+#add_subdirectory(syntax)
+#add_subdirectory(mc_compact)
+#the binary
+add_subdirectory(twflow)

@@ -810,7 +810,7 @@ FILE *fp ;
 
     yyin = fp ;
     line_countS = 0 ;
-    init() ;
+    mincut_init() ;
     /* parse input file using yacc */
     yyparse();  
 

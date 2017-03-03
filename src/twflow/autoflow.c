@@ -76,53 +76,53 @@ static INT objectS ;            /* the last program that was run */
 auto_flow()
 {
 
-    ADJPTR     adjptr ;         /* current edge in graph */
-    ADJPTR     make_decision(); /* decides which way to travel */
-    OBJECTPTR  o ;              /* current object */
+	ADJPTR     adjptr ;         /* current edge in graph */
+	ADJPTR     make_decision(); /* decides which way to travel */
+	OBJECTPTR  o ;              /* current object */
 
-    objectS = STARTOBJECT ;
-    problemsG = FALSE ;
+	objectS = STARTOBJECT ;
+	problemsG = FALSE ;
 
-    unmark_edges() ; /* set all program edges to be unmarked */
+	unmark_edges() ; /* set all program edges to be unmarked */
 
-    while( autoflowG ){ /* loop until done */
+	while( autoflowG ){ /* loop until done */
 
 
-	o = proGraphG[objectS] ;
-	if( o->numedges > 1 ){
-	    adjptr = make_decision( o, FORWARD ) ;
-	} else if( o->numedges == 1 ){
-	    ASSERT( o->adjF, "auto_flow", "Null edge pointer\n" ) ;
-	    adjptr = o->adjF ;
-	} else {
-	    /* now edges we are done */
-	    break ;
-	}
-	/* new object to be executed */
-	objectS = adjptr->node ;
+		o = proGraphG[objectS] ;
+		if( o->numedges > 1 ){
+			adjptr = make_decision( o, FORWARD ) ;
+		} else if( o->numedges == 1 ){
+			ASSERT( o->adjF, "auto_flow", "Null edge pointer\n" ) ;
+			adjptr = o->adjF ;
+		} else {
+			/* now edges we are done */
+			break ;
+		}
+		/* new object to be executed */
+		objectS = adjptr->node ;
 
-	/* tell graphics selected object and draw it */
-	G( graphics_set_object( objectS ) ) ;
+		/* tell graphics selected object and draw it */
+		G( graphics_set_object( objectS ) ) ;
+		G( draw_the_data() ) ;
+
+		if( check_dependencies( adjptr ) ){
+			/* program files are out of date execute program */
+			if( executePgm( adjptr ) ){
+				/* we received a non zero return code break loop */
+				/* report problem */
+				report_problem( adjptr ) ;
+				break ;
+			}
+		}
+
+		/* allow user to change things */
+		/* G( ) is NOGRAPHICS conditional compile */
+		G( if( graphicsG && TWinterupt() ) ){
+			G( process_graphics() ) ;
+		}
+
+	} /* end autoflow loop */
 	G( draw_the_data() ) ;
-
-	if( check_dependencies( adjptr ) ){
-	    /* program files are out of date execute program */
-	    if( executePgm( adjptr ) ){
-		/* we received a non zero return code break loop */
-		/* report problem */
-		report_problem( adjptr ) ;
-		break ;
-	    }
-	}
-
-        /* allow user to change things */
-	/* G( ) is NOGRAPHICS conditional compile */
-	G( if( graphicsG && TWinterupt() ) ){
-	    G( process_graphics() ) ;
-	}
-	
-    } /* end autoflow loop */
-    G( draw_the_data() ) ;
 
 } /* end autoflow */
 

@@ -10,7 +10,8 @@ add_executable(graywolf
 	${CMAKE_SOURCE_DIR}/src/date/date.c
 	)
 
-target_link_libraries(graywolf ${CMAKE_BINARY_DIR}/src/Ylib/libycadgraywolf.so)
+#target_link_libraries(graywolf ${CMAKE_BINARY_DIR}/src/Ylib/libycadgraywolf.a)
+target_link_libraries(graywolf ${CMAKE_BINARY_DIR}/src/mincut/libGraywolfMincut.a)
 target_link_libraries(graywolf X11)
 target_link_libraries(graywolf m)
 
@@ -19,6 +20,5 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include .)
 install(
 	TARGETS graywolf
 	DESTINATION ${CMAKE_INSTALL_BINDIR}
-	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)
 

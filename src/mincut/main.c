@@ -69,125 +69,63 @@ static char SccsId[] = "@(#) main.c version 1.1 7/30/91" ;
 #define EXPECTEDMEMORY  (1024 * 1024)  /* 1M should be enough */
 #define VERSION         "v1.0"
 
-Mincut( argc , argv )
-int argc ;
-char *argv[] ;
+Mincut( BOOL enableDebugging , char designName[] )
 {
+	printf("Mincut...\n");
 
-    char *YinitProgram(), *Ystrclone() ;
-    char filename[LRECL] ;
-    char command[LRECL] ;
-    char *ptr ;
-    int  arg_count ;
-    int  yaleIntro() ;
-    int  debug ;
-    FILE *fp ;
-    char *twdir, *Ygetenv() ;
+	char *YinitProgram(), *Ystrclone() ;
+	char filename[LRECL] ;
+	char command[LRECL] ;
+	char *ptr ;
+	int  arg_count ;
+	int  yaleIntro() ;
+	int  debug ;
+	FILE *fp ;
+	char *twdir, *Ygetenv() ;
 
-    /* start up cleanup handler */
-    YINITCLEANUP( argv[0], NULL, MAYBEDUMP ) ;
+	/* start up cleanup handler */
+	Yinit_memsize( EXPECTEDMEMORY ) ;
 
-    Yinit_memsize( EXPECTEDMEMORY ) ;
+	debug = FALSE ;
+	YsetDebug( enableDebugging ) ;
+	cktNameG = Ystrclone(designName);
 
-    if( argc < 2 || argc > 3 ){
-	syntax() ;
-    } else {
-	debug      = FALSE ;
-	arg_count = 1 ;
-	if( *argv[1] == '-' ){
-	    for( ptr = ++argv[1]; *ptr; ptr++ ){
-		switch( *ptr ){
-		case 'd':
-		    debug = TRUE ;
-		    break ;
-		default:
-		    sprintf( YmsgG,"Unknown option:%c\n", *ptr ) ;
-		    M(ERRMSG,"main",YmsgG);
-		    syntax() ;
-		}
-	    }
-	    YdebugMemory( debug ) ;
-	    cktNameG = Ystrclone( argv[++arg_count] );
+	/* we can change this value in the debugger */
+	YinitProgram(NOCUT, VERSION, yaleIntro) ;
 
-	    /* now tell the user what he picked */
-	    M(MSG,NULL,"\n\nSyntax switches:\n" ) ;
-	    if( debug ){
-		YsetDebug( TRUE ) ;
-		M(MSG,NULL,"\tdebug on\n" ) ;
-	    } 
-	    M(MSG,NULL,"\n" ) ;
-	} else if( argc == 2 ){
-	    /* order is important here */
-	    YdebugMemory( FALSE ) ;
-	    cktNameG = Ystrclone( argv[1] );
-
+	/*if( twdir = TWFLOWDIR ){
+		sprintf(command, "awk -f %s/bin/splt_file.a %s.cel", twdir , cktNameG ) ;
 	} else {
-	    syntax() ;
-	}
-    }
+		printf("ERROR:TWDIR environment variable not set.\n");
+		printf("Please set it to TimberWolf root directory\n");
+		YexitPgm( PGMFAIL ) ;
+	}*/
 
-    /* we can change this value in the debugger */
-    YinitProgram(NOCUT, VERSION, yaleIntro) ;
+	read_par() ;
 
-    if( twdir = TWFLOWDIR ){
-        sprintf(command, "awk -f %s/bin/splt_file.a %s.cel", twdir , 
-	cktNameG ) ;
-    } else {
-	printf("ERROR:TWDIR environment variable not set.\n");
-	printf("Please set it to TimberWolf root directory\n");
-	YexitPgm( PGMFAIL ) ;
-    }
+	sprintf( filename, "%s.cel", cktNameG ) ;
+	fp = TWOPEN( filename, "r", ABORT ) ;
+	readcells( fp ) ;
+	TWCLOSE( fp ) ;
 
-    read_par() ;
+	sprintf( filename, "%s.mcel", cktNameG ) ;
+	fp = TWOPEN( filename, "w", ABORT ) ;
+	output( fp ) ;
+	TWCLOSE( fp ) ;
 
-    sprintf( filename, "%s.cel", cktNameG ) ;
-    fp = TWOPEN( filename, "r", ABORT ) ;
-    readcells( fp ) ;
-    TWCLOSE( fp ) ;
+	sprintf( filename, "%s.stat", cktNameG ) ;
+	fp = TWOPEN( filename, "a", ABORT ) ;
+	update_stats( fp ) ;
+	TWCLOSE( fp ) ;
 
-    sprintf( filename, "%s.mcel", cktNameG ) ;
-    fp = TWOPEN( filename, "w", ABORT ) ;
-    output( fp ) ;
-    TWCLOSE( fp ) ;
+	printf( "Splitting %s.cel into " , cktNameG ) ;
+	printf( "%s.scel and %s.mcel...\n" , cktNameG , cktNameG ) ;
+	fflush( stdout ) ;
+	Ysystem( "Mincut", ABORT, command, NULL ) ;
+	printf( "\tdone!\n\n" ) ;
+	fflush( stdout ) ;
 
-    sprintf( filename, "%s.stat", cktNameG ) ;
-    fp = TWOPEN( filename, "a", ABORT ) ;
-    update_stats( fp ) ;
-    TWCLOSE( fp ) ;
-    
-    printf( "Splitting %s.cel into " , cktNameG ) ;
-    printf( "%s.scel and %s.mcel...\n" , cktNameG , cktNameG ) ;
-    fflush( stdout ) ;
-    Ysystem( "Mincut", ABORT, command, NULL ) ;
-    printf( "\tdone!\n\n" ) ;
-    fflush( stdout ) ;
-
-
-    YexitPgm( PGMOK ) ;
+	YexitPgm( PGMOK ) ;
 
 } /* end main */
 
-
-/* give user correct syntax */
-syntax()
-{
-   M(ERRMSG,NULL,"\n" ) ; 
-   M(MSG,NULL,"Incorrect syntax.  Correct syntax:\n");
-   sprintf( YmsgG, 
-       "\n%s circuitName\n\n", NOCUT );
-   M(MSG,NULL,YmsgG ) ; 
-   YexitPgm(PGMFAIL);
-} /* end syntax */
-
-yaleIntro() 
-{
-    int i ;
-
-    M( MSG, NULL, "\n") ;
-    M( MSG, NULL, YmsgG) ;
-    M( MSG, NULL, "\nTimberWolf System Floorplan Setup Program\n");
-    M( MSG, NULL, "Authors: Carl Sechen, Bill Swartz,\n");
-    M( MSG, NULL, "         Yale University\n");
-    M( MSG, NULL, "\n");
-
-} /* end yaleIntro */

@@ -126,11 +126,6 @@ FILE *find_flow_file( general_mode, debug, filename )
 	}
 
 	if( flow_dirG ){
-		/* first try absolute path */
-		sprintf( filename, "%s/%s.%s", flow_dirG, prefix, suffix ) ;
-		if( fp = TWOPEN( filename, "r", NOABORT ) ){
-			return( fp ) ;
-		}
 		/* next try relative to TimberWolf root directory. */
 		sprintf( filename, "%s/%s/%s.%s", twdirG, flow_dirG, prefix, suffix ) ;
 		if( fp = TWOPEN( filename, "r", NOABORT ) ){
@@ -141,7 +136,7 @@ FILE *find_flow_file( general_mode, debug, filename )
 		sprintf( YmsgG, "\n\t%s\n", filename ) ;
 		M( ERRMSG, NULL, YmsgG ) ;
 		M( ERRMSG, NULL, "  or\n" ) ;
-		sprintf( YmsgG, "\t%s/%s.%s\n", flow_dirG, prefix,suffix);
+		sprintf( YmsgG, "\n\t%s/%s.%s\n", flow_dirG, prefix,suffix);
 		M( ERRMSG, NULL, YmsgG ) ;
 		show_flows() ;
 		if( graphicsG ){
@@ -153,7 +148,7 @@ FILE *find_flow_file( general_mode, debug, filename )
 	sprintf( filename, "%s.%s", prefix, suffix ) ;
 	fp = TWOPEN( filename, "r", NOABORT ) ;
 	if( !(fp) ){
-		sprintf( filename, "%s/%s.%s",twdirG,prefix,suffix ) ;
+		sprintf( filename, "%s/flow.noroute/%s.%s",twdirG,prefix,suffix ) ;
 		fp = TWOPEN( filename, "r", ABORT ) ;
 	}
 	return( fp ) ;

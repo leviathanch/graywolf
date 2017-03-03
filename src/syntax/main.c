@@ -156,30 +156,3 @@ char *argv[] ;
 
 } /* end main */
 
-
-/* give user correct syntax */
-syntax()
-{
-   M(ERRMSG,NULL,"\n" ) ; 
-   M(MSG,NULL,"Incorrect syntax.  Correct syntax:\n");
-   sprintf( YmsgG, 
-       "\n%s circuitName\n\n", SYNTAX );
-   M(MSG,NULL,YmsgG ) ; 
-   YexitPgm(PGMFAIL);
-} /* end syntax */
-
-yaleIntro() 
-{
-    int i ;
-
-    M( MSG, NULL, "\n") ;
-    M( MSG, NULL, YmsgG) ;
-    M( MSG, NULL, "\nTimberWolf System Syntax Checker\n");
-    M( MSG, NULL, "Authors: Carl Sechen, Kai-Win Lee, Bill Swartz,\n");
-    M( MSG, NULL, "         Dahe Chen, and Jimmy Lam\n"); 
-    M( MSG, NULL, "         Yale University\n");
-    M( MSG, NULL, "\n");
-
-    fprintf(fpoG,"%s\n",YmsgG ) ; 
-
-} /* end yaleIntro */

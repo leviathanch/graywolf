@@ -278,29 +278,3 @@ char *argv[] ;
 
 } /* end main */
 
-
-yaleIntro() 
-{
-
-    printf("\n%s\n",YmsgG) ;
-    printf("Row configuration program\n");
-    printf("    Yale University\n");
-
-} /* end yaleIntro */
-
-/* give user correct syntax */
-syntax()
-{
-   M(ERRMSG,NULL,"\n" ) ; 
-   M(MSG,NULL,"Incorrect syntax.  Correct syntax:\n");
-   sprintf( YmsgG, 
-       "\nconfig [-dnw] designName [windowId] \n" ) ;
-   M(MSG,NULL,YmsgG ) ; 
-   M(MSG,NULL,"\twhose options are zero or more of the following:\n");
-   M(MSG,NULL,"\t\td - prints debug info and performs extensive\n");
-   M(MSG,NULL,"\t\t    error checking\n");
-   M(MSG,NULL,"\t\tn - no graphics - the default is to open the\n");
-   M(MSG,NULL,"\t\t    display and output graphics to an Xwindow\n");
-   M(MSG,NULL,"\t\tw - parasite mode - user must specify windowId\n");
-   YexitPgm(PGMFAIL);
-} /* end syntax */

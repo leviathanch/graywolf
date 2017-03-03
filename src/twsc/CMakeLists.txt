@@ -1,5 +1,5 @@
 
-add_executable(TimberWolfSC
+add_library(TimberWolfSC STATIC
 	acceptt.c
 	coarseglb.c
 	debug2.c
@@ -62,7 +62,6 @@ add_executable(TimberWolfSC
 	${CMAKE_SOURCE_DIR}/src/date/date.c
 	)
 
-target_link_libraries(TimberWolfSC ${CMAKE_BINARY_DIR}/src/Ylib/libycadgraywolf.so)
 target_link_libraries(TimberWolfSC X11)
 target_link_libraries(TimberWolfSC m)
 
@@ -70,6 +69,6 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include .)
 
 install(
 	TARGETS TimberWolfSC
-	DESTINATION ${CMAKE_INSTALL_BINDIR}
+	DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	)
 

@@ -84,7 +84,7 @@ static char current_cellS[LRECL] ; /* the current cell name */
 static char cur_pinnameS[LRECL] ;  /* current pinname */
 static YHASHPTR netTableS ;    /* hash table for cross referencing nets */
 /* *************************************************************** */
-init()
+mincut_init()
 {
     /* get ready for parsing */
     /* make hash table for nets */

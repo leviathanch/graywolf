@@ -1,3 +1,5 @@
 
+add_library(ycadgraywolfGetdate STATIC
+	getdate.c
+	)
 
-add_executable(getdate getdate.c)
