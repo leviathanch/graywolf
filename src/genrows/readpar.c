@@ -61,6 +61,7 @@ static char SccsId[] = "@(#) readpar.c (Yale) version 1.9 5/14/92" ;
 #include <yalecad/yreadpar.h>
 #include <yalecad/message.h>
 #include <globals.h>
+#include <string.h>
 
 #define COMMENT '#'
 
@@ -69,6 +70,7 @@ static BOOL abortS = FALSE ;
 static void err_msg(); 
 static void get_defaults();
 static int getnumRows();
+static void get_defaults( BOOL feed_percent_default, BOOL row_sep_default );
 
 void readpar()
 {
@@ -97,17 +99,18 @@ void readpar()
 	Yreadpar_init( cktNameG, USER, GENR, FALSE ) ;
 
 	char *tmpStr;
-	while( tokens = Yreadpar_next( &lineptr, &line, &numtokens, &onNotOff, &wildcard )) {
+	while((tokens = Yreadpar_next( &lineptr, &line, &numtokens, &onNotOff, &wildcard))) {
 		if( numtokens ) {
-			if(tmpStr = strstr(tokens[0], "TWSC*")) {
+			if((tmpStr = strstr(tokens[0], "TWSC*"))) {
 				continue;
-			} else if (tmpStr = strstr(tokens[0], "TWMC*")) {
+			} else if ((tmpStr = strstr(tokens[0], "TWMC*"))) {
 				continue;
-			} else if (tmpStr = strstr(tokens[0], "GENR*")) {
-				tmpStr+=5;
+			} else if ((tmpStr = strstr(tokens[0], "GENR*"))) {
+				tmpStr+=strlen("GENR*");
 				tokens[0] = Ystrclone(tmpStr);
-			} else if (tmpStr = strstr(tokens[0], "*")) {
-				continue;
+			} else if ((tmpStr = strchr(tokens[0], '*'))) {
+				tmpStr++;
+				tokens[0] = Ystrclone(tmpStr);
 			}
 		}
 
@@ -202,6 +205,11 @@ void readpar()
 			} else {
 				no_outputG = FALSE ;
 			}
+		} else if( strcmp( tokens[0], "vertical_wire_weight" ) == STRINGEQ ){
+		} else if( strcmp( tokens[0], "vertical_path_weight" ) == STRINGEQ ){
+		} else if( strcmp( tokens[0], "padspacing" ) == STRINGEQ ){
+		} else if( strcmp( tokens[0], "track.pitch" ) == STRINGEQ ){
+		} else if( strcmp( tokens[0], "random.seed" ) == STRINGEQ ){
 			/*** catch all ***/
 		} else if(!(wildcard)){
 			sprintf( YmsgG, 
@@ -249,8 +257,7 @@ char *keyword ;
     abortS = TRUE ;
 }/* end err_msg */
 
-static get_defaults( feed_percent_default, row_sep_default )
-BOOL feed_percent_default, row_sep_default ;
+static void get_defaults( BOOL feed_percent_default, BOOL row_sep_default )
 {
     FILE *fp ;
     char filename[LRECL] ;
@@ -325,7 +332,7 @@ static int getnumRows()
     line = 0 ;  /*--- initialize the line counter ---*/
   
     /*-----------  parse file ------------*/
-    while( bufferptr = fgets( buffer, LRECL, fp )){
+    while((bufferptr = fgets( buffer, LRECL, fp ))){
 
 	tokens = Ystrparser( bufferptr, "\t\n/ ", &numtokens );
 	if( numtokens == 0 ){
