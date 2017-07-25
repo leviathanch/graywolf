@@ -149,22 +149,16 @@ int find_flow_file( BOOL general_mode, BOOL debug, char *filename )
 	}
 
 	sprintf( filename, "%s.%s", prefix, suffix ) ;
-	printf("Does file %s exist? \n", filename );
 	if(access( filename, F_OK ) == -1) {
-		printf("File %s doesn't exist \n", filename );
-
 		sprintf( filename, "%s/flow.noroute/%s.%s",twdirG,prefix,suffix ) ;
-		printf("Does file %s exist? \n", filename );
 		if(access( filename, F_OK ) == -1) {
 			printf("File %s doesn't exist \n", filename );
 			return 1;
 		}
-
-		printf("File %s exists \n", filename );
+		printf("Using file %s\n", filename );
 		return 0;
 	}
-
-	printf("File %s exists \n", filename );
+	printf("Using file %s\n", filename );
 	return 0;
 } /* end find_flow_file */
 
