@@ -25,7 +25,6 @@ static char Yokmalloc_HId[] = "@(#) okmalloc.h version 1.1 3/5/92" ;
 
 /* memory manager definitions - safety net between memory manager */
 extern void Ysafe_free( void *ptr ) ;
-extern void Ysafe_cfree( void *ptr ) ;
 extern char *Ysafe_malloc( int bytes ) ;
 extern char *Ysafe_calloc( int num_entries, int bytes ) ;
 extern char *Ysafe_realloc( void *ptr, int bytes ) ;

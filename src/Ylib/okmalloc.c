@@ -59,8 +59,6 @@ CONTENTS:
 	      USER  CALLS FOR C RUN TIME LIBRARY 
 	    VOID Ysafe_free(ptr)
 		char *ptr;
-	    VOID Ysafe_cfree(ptr)
-		char *ptr;
 	    char *Ysafe_malloc(bytes)
 		long bytes;
 	    char *Ysafe_calloc(num_entries, bytes)
@@ -201,12 +199,6 @@ char *Ysafe_calloc(int num, int size)
 void Ysafe_free(void *ptr)
 {
 	free(ptr);
-	return;
-}
-
-void Ysafe_cfree(void* ptr)
-{
-	cfree(ptr);
 	return;
 }
 
